@@ -167,8 +167,8 @@ export class Live2DModel<IM extends InternalModel = InternalModel> extends Conta
      */
     motion(
         group: string,
-        index: number,
-        priority: MotionPriority,
+        index?: number,
+        priority?: MotionPriority,
         {
             sound = undefined,
             volume = VOLUME,
