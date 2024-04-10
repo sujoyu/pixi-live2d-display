@@ -1,5 +1,4 @@
-import type { InternalModel, ModelSettings } from "@/cubism-common";
-import { MotionPriority } from "@/cubism-common";
+import type { InternalModel, ModelSettings, MotionPriority } from "@/cubism-common";
 import type { MotionManagerOptions } from "@/cubism-common/MotionManager";
 import { VOLUME } from "@/cubism-common/SoundManager";
 import type { Live2DFactoryOptions } from "@/factory/Live2DFactory";
@@ -168,8 +167,8 @@ export class Live2DModel<IM extends InternalModel = InternalModel> extends Conta
      */
     motion(
         group: string,
-        index: number,
-        priority: MotionPriority = MotionPriority.NORMAL,
+        index?: number,
+        priority?: MotionPriority,
         {
             sound = undefined,
             volume = VOLUME,

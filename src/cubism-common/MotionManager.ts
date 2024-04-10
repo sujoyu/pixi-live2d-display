@@ -302,7 +302,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
         }
 
         if (audio) {
-            let playSuccess = false;
+            let playSuccess = true;
             const readyToPlay = SoundManager.play(audio).catch((e) => {
                 logger.warn(this.tag, "Failed to play audio", audio!.src, e);
                 playSuccess = false;
@@ -361,15 +361,14 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
             crossOrigin?: string;
         } = {},
     ): Promise<boolean> {
-        // Does not start a new motion if audio is still playing
-        if (this.currentAudio) {
-            if (!this.currentAudio.ended) {
-                return false;
-            }
-        }
-
         if (!this.state.reserve(group, index, priority)) {
             return false;
+        }
+        // Does not start a new motion if audio is still playing
+        if (this.currentAudio) {
+            if (!this.currentAudio.ended && priority != MotionPriority.FORCE) {
+                return false;
+            }
         }
 
         const definition = this.definitions[group]?.[index];
@@ -387,59 +386,58 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
         let analyzer: AnalyserNode | undefined;
         let context: AudioContext | undefined;
 
-        if (config.sound) {
-            const isBase64Content = sound && sound.startsWith("data:audio/wav;base64");
-            if (sound && !isBase64Content) {
-                const A = document.createElement("a");
-                A.href = sound;
-                sound = A.href; // This should be the absolute url
-                // since resolveURL is not working for some reason
-            }
-            const isUrlPath = sound && (sound.startsWith("http") || sound.startsWith("blob"));
-            const soundURL = this.getSoundFile(definition);
-            let file = soundURL;
+        let soundURL: string | undefined;
+        const isBase64Content = sound && sound.startsWith("data:");
+
+        if (sound && !isBase64Content) {
+            const A = document.createElement("a");
+            A.href = sound;
+            sound = A.href; // This should be the absolute url
+            // since resolveURL is not working for some reason
+            soundURL = sound;
+        } else {
+            soundURL = this.getSoundFile(definition);
             if (soundURL) {
-                file = this.settings.resolveURL(soundURL) + "?cache-buster=" + new Date().getTime();
+                soundURL = this.settings.resolveURL(soundURL);
             }
-            if (isUrlPath || isBase64Content) {
-                file = sound;
-            }
-            if (file) {
-                try {
-                    // start to load the audio
-                    audio = SoundManager.add(
-                        file,
-                        (that = this) => {
-                            resetExpression &&
-                                expression &&
-                                that.expressionManager &&
-                                that.expressionManager.resetExpression();
-                            that.currentAudio = undefined;
-                        }, // reset expression when audio is done
-                        (e, that = this) => {
-                            resetExpression &&
-                                expression &&
-                                that.expressionManager &&
-                                that.expressionManager.resetExpression();
-                            that.currentAudio = undefined;
-                        }, // on error
-                        crossOrigin,
-                    );
+        }
+        const file: string | undefined = soundURL;
 
-                    this.currentAudio = audio!;
+        if (file) {
+            try {
+                // start to load the audio
+                audio = SoundManager.add(
+                    file,
+                    (that = this) => {
+                        resetExpression &&
+                            expression &&
+                            that.expressionManager &&
+                            that.expressionManager.resetExpression();
+                        that.currentAudio = undefined;
+                    }, // reset expression when audio is done
+                    (e, that = this) => {
+                        resetExpression &&
+                            expression &&
+                            that.expressionManager &&
+                            that.expressionManager.resetExpression();
+                        that.currentAudio = undefined;
+                    }, // on error
+                    crossOrigin,
+                );
 
-                    SoundManager.volume = volume;
+                this.currentAudio = audio!;
 
-                    // Add context
-                    context = SoundManager.addContext(this.currentAudio);
-                    this.currentContext = context;
+                SoundManager.volume = volume;
 
-                    // Add analyzer
-                    analyzer = SoundManager.addAnalyzer(this.currentAudio, this.currentContext);
-                    this.currentAnalyzer = analyzer;
-                } catch (e) {
-                    logger.warn(this.tag, "Failed to create audio", soundURL, e);
-                }
+                // Add context
+                context = SoundManager.addContext(this.currentAudio);
+                this.currentContext = context;
+
+                // Add analyzer
+                analyzer = SoundManager.addAnalyzer(this.currentAudio, this.currentContext);
+                this.currentAnalyzer = analyzer;
+            } catch (e) {
+                logger.warn(this.tag, "Failed to create audio", soundURL, e);
             }
         }
 
