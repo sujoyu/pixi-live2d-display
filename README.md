@@ -112,13 +112,13 @@ import { Live2DModel } from 'pixi-live2d-display/cubism4';
 
 
 <!-- if support for both Cubism 2.1 and 4 -->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-2/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-3/dist/index.min.js"></script>
 
-<!-- if only Cubism 2.1 -->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-2/dist/cubism2.min.js"></script>
+<!-- if only Cubism 2.1 support-->
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-3/dist/cubism2.min.js"></script>
 
-<!-- if only Cubism 4 -->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-2/dist/cubism4.min.js"></script>
+<!-- if only Cubism 4 support-->
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-3/dist/cubism4.min.js"></script>
 ```
 
 In this way, all the exported members are available under `PIXI.live2d` namespace, such as `PIXI.live2d.Live2DModel`.
@@ -126,8 +126,8 @@ In this way, all the exported members are available under `PIXI.live2d` namespac
 ## Basic usage
 
 ```javascript
-import * as PIXI from 'pixi.js';
-import { Live2DModel } from 'pixi-live2d-display';
+import * as PIXI from 'pixi.js'; // you can use PIXI from NPM or CDN (if CDN, no need to import it here)
+// import { Live2DModel } from 'pixi-live2d-display'; // Do not use the npm package (not supported yet), use the CDN instead!!!
 
 // expose PIXI to window so that this plugin is able to
 // reference window.PIXI.Ticker to automatically update Live2D models
