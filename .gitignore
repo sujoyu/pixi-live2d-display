@@ -9,7 +9,6 @@ core
 /lib
 /site
 /types
-/dist
 
 .DS_Store
 node_modules
