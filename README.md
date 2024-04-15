@@ -271,3 +271,4 @@ Live2D's [Free Material License](https://www.live2d.com/eula/live2d-free-materia
 
 # Extra credit:
 * [fatalgoth](https://github.com/fatalgoth/pixi-live2d-display) for making lipsync possible.
+* [windjackz](https://github.com/windjackz/pixi-live2d-display) for creating all the cool features
