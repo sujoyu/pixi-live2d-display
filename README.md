@@ -268,3 +268,6 @@ Renderer.registerPlugin('interaction', InteractionManager);
 
 The example Live2D models, Shizuku (Cubism 2.1) and Haru (Cubism 4), are redistributed under
 Live2D's [Free Material License](https://www.live2d.com/eula/live2d-free-material-license-agreement_en.html).
+
+# Extra credit:
+* [fatalgoth](https://github.com/fatalgoth/pixi-live2d-display) for making lipsync possible.
