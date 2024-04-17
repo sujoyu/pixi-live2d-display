@@ -108,7 +108,7 @@ import { Live2DModel } from 'pixi-live2d-display/cubism4';
 <!-- Load Cubism and PixiJS -->
 <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
-<script src="https://pixijs.download/v7.4.0/pixi.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
 
 
 <!-- if support for both Cubism 2.1 and 4 -->
