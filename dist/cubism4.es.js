@@ -1476,7 +1476,7 @@ var LogLevel = /* @__PURE__ */ ((LogLevel2) => {
   LogLevel2[LogLevel2["LogLevel_Off"] = 5] = "LogLevel_Off";
   return LogLevel2;
 })(LogLevel || {});
-const CSM_ASSERT = process.env.NODE_ENV === "production" ? () => {
+const CSM_ASSERT = typeof process !== "undefined" && process.env.NODE_ENV === "production" ? () => {
 } : (expr) => console.assert(expr);
 function CubismLogVerbose(fmt, ...args) {
   CubismDebug.print(LogLevel.LogLevel_Verbose, "[CSM][V]" + fmt + "\n", args);
