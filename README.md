@@ -220,6 +220,20 @@ model.stopSpeaking()
 model.stopMotions()
 ```
 
+## Use callback function after a voiceline is over
+* Demo code
+```js
+model.speak(audio_link, {volume: volume, 
+  onFinish: () => {console.log("Voiceline is over")},
+  onError: (err) => {console.log("Error: "+err)} // [if any error occurs]
+})
+
+model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, expression:expression,
+  onFinish: () => {console.log("Voiceline and Animation is over")},
+  onError: (err) => {console.log("Error: "+err)} // [if any error occurs]
+})
+```
+
 ## Totally destroy the model
 * This will also stop the motion and audio from running and hide the model
 * Demo code

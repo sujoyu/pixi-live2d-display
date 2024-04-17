@@ -229,11 +229,15 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
             expression,
             resetExpression = true,
             crossOrigin,
+            onFinish,
+            onError,
         }: {
             volume?: number;
             expression?: number | string;
             resetExpression?: boolean;
             crossOrigin?: string;
+            onFinish?: () => void;
+            onError?: (e: Error) => void;
         } = {},
     ): Promise<boolean> {
         if (!config.sound) {
@@ -252,6 +256,8 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
         let soundURL: string | undefined;
         const isBase64Content = sound && sound.startsWith("data:");
 
+        console.log(onFinish)
+
         if (sound && !isBase64Content) {
             const A = document.createElement("a");
             A.href = sound;
@@ -268,6 +274,8 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                 audio = SoundManager.add(
                     file,
                     (that = this) => {
+                        console.log('Audio finished playing'); // Add this line
+                        onFinish?.();
                         resetExpression &&
                             expression &&
                             that.expressionManager &&
@@ -275,6 +283,8 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                         that.currentAudio = undefined;
                     }, // reset expression when audio is done
                     (e, that = this) => {
+                        console.log('Error during audio playback:', e); // Add this line
+                        onError?.(e);
                         resetExpression &&
                             expression &&
                             that.expressionManager &&
@@ -283,6 +293,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                     }, // on error
                     crossOrigin,
                 );
+
                 this.currentAudio = audio!;
 
                 SoundManager.volume = volume;
@@ -353,12 +364,16 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
             expression = undefined,
             resetExpression = true,
             crossOrigin,
+            onFinish,
+            onError,
         }: {
             sound?: string;
             volume?: number;
             expression?: number | string;
             resetExpression?: boolean;
             crossOrigin?: string;
+            onFinish?: () => void;
+            onError?: (e: Error) => void;
         } = {},
     ): Promise<boolean> {
         if (!this.state.reserve(group, index, priority)) {
@@ -409,6 +424,9 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                 audio = SoundManager.add(
                     file,
                     (that = this) => {
+                        console.log('Audio finished playing'); // Add this line
+                        onFinish?.();
+                        console.log(onFinish)
                         resetExpression &&
                             expression &&
                             that.expressionManager &&
@@ -416,6 +434,8 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                         that.currentAudio = undefined;
                     }, // reset expression when audio is done
                     (e, that = this) => {
+                        console.log('Error during audio playback:', e); // Add this line
+                        onError?.(e);
                         resetExpression &&
                             expression &&
                             that.expressionManager &&
@@ -502,12 +522,16 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
             expression,
             resetExpression = true,
             crossOrigin,
+            onFinish,
+            onError,
         }: {
             sound?: string;
             volume?: number;
             expression?: number | string;
             resetExpression?: boolean;
             crossOrigin?: string;
+            onFinish?: () => void;
+            onError?: (e: Error) => void;
         } = {},
     ): Promise<boolean> {
         const groupDefs = this.definitions[group];
@@ -531,6 +555,8 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                     expression: expression,
                     resetExpression: resetExpression,
                     crossOrigin: crossOrigin,
+                    onFinish: onFinish,
+                    onError: onError,
                 });
             }
         }

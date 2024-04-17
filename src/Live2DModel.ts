@@ -175,29 +175,37 @@ export class Live2DModel<IM extends InternalModel = InternalModel> extends Conta
             expression = undefined,
             resetExpression = true,
             crossOrigin,
+            onFinish,
+            onError,
         }: {
             sound?: string;
             volume?: number;
             expression?: number | string;
             resetExpression?: boolean;
             crossOrigin?: string;
+            onFinish?: () => void;
+            onError?: (e: Error) => void;
         } = {},
     ): Promise<boolean> {
         return index === undefined
             ? this.internalModel.motionManager.startRandomMotion(group, priority, {
-                  sound: sound,
-                  volume: volume,
-                  expression: expression,
-                  resetExpression: resetExpression,
-                  crossOrigin: crossOrigin,
-              })
+                sound: sound,
+                volume: volume,
+                expression: expression,
+                resetExpression: resetExpression,
+                crossOrigin: crossOrigin,
+                onFinish: onFinish,
+                onError: onError,
+            })
             : this.internalModel.motionManager.startMotion(group, index, priority, {
-                  sound: sound,
-                  volume: volume,
-                  expression: expression,
-                  resetExpression: resetExpression,
-                  crossOrigin: crossOrigin,
-              });
+                sound: sound,
+                volume: volume,
+                expression: expression,
+                resetExpression: resetExpression,
+                crossOrigin: crossOrigin,
+                onFinish: onFinish,
+                onError: onError,
+            });
     }
 
     /**
@@ -223,11 +231,15 @@ export class Live2DModel<IM extends InternalModel = InternalModel> extends Conta
             expression,
             resetExpression = true,
             crossOrigin,
+            onFinish,
+            onError,
         }: {
             volume?: number;
             expression?: number | string;
             resetExpression?: boolean;
             crossOrigin?: string;
+            onFinish?: () => void;
+            onError?: (e: Error) => void;
         } = {},
     ): Promise<boolean> {
         return this.internalModel.motionManager.speak(sound, {
@@ -235,6 +247,8 @@ export class Live2DModel<IM extends InternalModel = InternalModel> extends Conta
             expression: expression,
             resetExpression: resetExpression,
             crossOrigin: crossOrigin,
+            onFinish: onFinish,
+            onError: onError,
         });
     }
 
