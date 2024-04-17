@@ -126,7 +126,7 @@ In this way, all the exported members are available under `PIXI.live2d` namespac
 ## Basic usage
 
 ```javascript
-import * as PIXI from 'pixi.js'; // you can use PIXI from NPM or CDN (if CDN, no need to import it here)
+// import * as PIXI from 'pixi.js'; // you can use PIXI from NPM or CDN (if CDN, no need to import it here)
 // import { Live2DModel } from 'pixi-live2d-display'; // Do not use the npm package (not supported yet), use the CDN instead!!!
 
 // expose PIXI to window so that this plugin is able to
