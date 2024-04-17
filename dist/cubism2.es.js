@@ -993,7 +993,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       if (!config.sound) {
         return false;
@@ -1008,6 +1010,7 @@ class MotionManager extends utils.EventEmitter {
       }
       let soundURL;
       const isBase64Content = sound && sound.startsWith("data:");
+      console.log(onFinish);
       if (sound && !isBase64Content) {
         const A = document.createElement("a");
         A.href = sound;
@@ -1022,11 +1025,15 @@ class MotionManager extends utils.EventEmitter {
           audio = SoundManager.add(
             file,
             (that = this) => {
+              console.log("Audio finished playing");
+              onFinish == null ? void 0 : onFinish();
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
             // reset expression when audio is done
             (e, that = this) => {
+              console.log("Error during audio playback:", e);
+              onError == null ? void 0 : onError(e);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
@@ -1086,7 +1093,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression = void 0,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       var _a;
       if (!this.state.reserve(group, index, priority)) {
@@ -1126,11 +1135,16 @@ class MotionManager extends utils.EventEmitter {
           audio = SoundManager.add(
             file,
             (that = this) => {
+              console.log("Audio finished playing");
+              onFinish == null ? void 0 : onFinish();
+              console.log(onFinish);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
             // reset expression when audio is done
             (e, that = this) => {
+              console.log("Error during audio playback:", e);
+              onError == null ? void 0 : onError(e);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
@@ -1193,7 +1207,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       const groupDefs = this.definitions[group];
       if (groupDefs == null ? void 0 : groupDefs.length) {
@@ -1210,7 +1226,9 @@ class MotionManager extends utils.EventEmitter {
             volume,
             expression,
             resetExpression,
-            crossOrigin
+            crossOrigin,
+            onFinish,
+            onError
           });
         }
       }
@@ -2441,20 +2459,26 @@ class Live2DModel extends Container {
     volume = VOLUME,
     expression = void 0,
     resetExpression = true,
-    crossOrigin
+    crossOrigin,
+    onFinish,
+    onError
   } = {}) {
     return index === void 0 ? this.internalModel.motionManager.startRandomMotion(group, priority, {
       sound,
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     }) : this.internalModel.motionManager.startMotion(group, index, priority, {
       sound,
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     });
   }
   /**
@@ -2476,13 +2500,17 @@ class Live2DModel extends Container {
     volume = VOLUME,
     expression,
     resetExpression = true,
-    crossOrigin
+    crossOrigin,
+    onFinish,
+    onError
   } = {}) {
     return this.internalModel.motionManager.speak(sound, {
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     });
   }
   /**

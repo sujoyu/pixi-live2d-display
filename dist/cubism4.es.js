@@ -3093,13 +3093,6 @@ class ACubismMotion {
 const DefaultFadeTime = 1;
 class CubismExpressionMotion extends ACubismMotion {
   /**
-   * コンストラクタ
-   */
-  constructor() {
-    super();
-    this._parameters = [];
-  }
-  /**
    * インスタンスを作成する。
    * @param json expファイルが読み込まれているバッファ
    * @param size バッファのサイズ
@@ -3177,6 +3170,13 @@ class CubismExpressionMotion extends ACubismMotion {
       };
       this._parameters.push(item);
     }
+  }
+  /**
+   * コンストラクタ
+   */
+  constructor() {
+    super();
+    this._parameters = [];
   }
   // 表情のパラメータ情報リスト
 }
@@ -7283,23 +7283,6 @@ const fragmentShaderSrcMaskPremultipliedAlpha = "precision mediump float;varying
 const fragmentShaderSrcMaskInvertedPremultipliedAlpha = "precision mediump float;varying vec2      v_texCoord;varying vec4      v_clipPos;uniform sampler2D s_texture0;uniform sampler2D s_texture1;uniform vec4      u_channelFlag;uniform vec4      u_baseColor;uniform vec4      u_multiplyColor;uniform vec4      u_screenColor;void main(){   vec4 texColor = texture2D(s_texture0, v_texCoord);   texColor.rgb = texColor.rgb * u_multiplyColor.rgb;   texColor.rgb = (texColor.rgb + u_screenColor.rgb * texColor.a) - (texColor.rgb * u_screenColor.rgb);   vec4 col_formask = texColor * u_baseColor;   vec4 clipMask = (1.0 - texture2D(s_texture1, v_clipPos.xy / v_clipPos.w)) * u_channelFlag;   float maskVal = clipMask.r + clipMask.g + clipMask.b + clipMask.a;   col_formask = col_formask * (1.0 - maskVal);   gl_FragColor = col_formask;}";
 class CubismRenderer_WebGL extends CubismRenderer {
   /**
-   * コンストラクタ
-   */
-  constructor() {
-    super();
-    this._clippingContextBufferForMask = null;
-    this._clippingContextBufferForDraw = null;
-    this._rendererProfile = new CubismRendererProfile_WebGL();
-    this.firstDraw = true;
-    this._textures = {};
-    this._sortedDrawableIndexList = [];
-    this._bufferData = {
-      vertex: null,
-      uv: null,
-      index: null
-    };
-  }
-  /**
    * レンダラの初期化処理を実行する
    * 引数に渡したモデルからレンダラの初期化処理に必要な情報を取り出すことができる
    *
@@ -7373,6 +7356,23 @@ class CubismRenderer_WebGL extends CubismRenderer {
    */
   getRenderTextureCount() {
     return this._model.isUsingMasking() ? this._clippingManager.getRenderTextureCount() : -1;
+  }
+  /**
+   * コンストラクタ
+   */
+  constructor() {
+    super();
+    this._clippingContextBufferForMask = null;
+    this._clippingContextBufferForDraw = null;
+    this._rendererProfile = new CubismRendererProfile_WebGL();
+    this.firstDraw = true;
+    this._textures = {};
+    this._sortedDrawableIndexList = [];
+    this._bufferData = {
+      vertex: null,
+      uv: null,
+      index: null
+    };
   }
   /**
    * デストラクタ相当の処理
@@ -8676,7 +8676,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       if (!config.sound) {
         return false;
@@ -8691,6 +8693,7 @@ class MotionManager extends utils.EventEmitter {
       }
       let soundURL;
       const isBase64Content = sound && sound.startsWith("data:");
+      console.log(onFinish);
       if (sound && !isBase64Content) {
         const A = document.createElement("a");
         A.href = sound;
@@ -8705,11 +8708,15 @@ class MotionManager extends utils.EventEmitter {
           audio = SoundManager.add(
             file,
             (that = this) => {
+              console.log("Audio finished playing");
+              onFinish == null ? void 0 : onFinish();
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
             // reset expression when audio is done
             (e, that = this) => {
+              console.log("Error during audio playback:", e);
+              onError == null ? void 0 : onError(e);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
@@ -8769,7 +8776,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression = void 0,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       var _a;
       if (!this.state.reserve(group, index, priority)) {
@@ -8809,11 +8818,16 @@ class MotionManager extends utils.EventEmitter {
           audio = SoundManager.add(
             file,
             (that = this) => {
+              console.log("Audio finished playing");
+              onFinish == null ? void 0 : onFinish();
+              console.log(onFinish);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
             // reset expression when audio is done
             (e, that = this) => {
+              console.log("Error during audio playback:", e);
+              onError == null ? void 0 : onError(e);
               resetExpression && expression && that.expressionManager && that.expressionManager.resetExpression();
               that.currentAudio = void 0;
             },
@@ -8876,7 +8890,9 @@ class MotionManager extends utils.EventEmitter {
       volume = VOLUME,
       expression,
       resetExpression = true,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     } = {}) {
       const groupDefs = this.definitions[group];
       if (groupDefs == null ? void 0 : groupDefs.length) {
@@ -8893,7 +8909,9 @@ class MotionManager extends utils.EventEmitter {
             volume,
             expression,
             resetExpression,
-            crossOrigin
+            crossOrigin,
+            onFinish,
+            onError
           });
         }
       }
@@ -10124,20 +10142,26 @@ class Live2DModel extends Container {
     volume = VOLUME,
     expression = void 0,
     resetExpression = true,
-    crossOrigin
+    crossOrigin,
+    onFinish,
+    onError
   } = {}) {
     return index === void 0 ? this.internalModel.motionManager.startRandomMotion(group, priority, {
       sound,
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     }) : this.internalModel.motionManager.startMotion(group, index, priority, {
       sound,
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     });
   }
   /**
@@ -10159,13 +10183,17 @@ class Live2DModel extends Container {
     volume = VOLUME,
     expression,
     resetExpression = true,
-    crossOrigin
+    crossOrigin,
+    onFinish,
+    onError
   } = {}) {
     return this.internalModel.motionManager.speak(sound, {
       volume,
       expression,
       resetExpression,
-      crossOrigin
+      crossOrigin,
+      onFinish,
+      onError
     });
   }
   /**
