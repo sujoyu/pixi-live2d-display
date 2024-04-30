@@ -198,8 +198,9 @@ var audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.
 var volume = 1; // [Optional arg, can be null or empty] [0.0 - 1.0]
 var expression = 4; // [Optional arg, can be null or empty] [index|name of expression]
 var resetExpression = true; // [Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
+var crossOrigin = "anonymous"; // [Optional arg, to use not same-origin audios] [DEFAULT: null]
 
-model.speak(audio_link, {volume: volume, expression:expression, resetExpression:resetExpression})
+model.speak(audio_link, {volume: volume, expression:expression, resetExpression:resetExpression, crossOrigin: crossOrigin})
 
 // Or if you want to keep some things default
 model.speak(audio_link)
@@ -207,6 +208,15 @@ model.speak(audio_link, {volume: volume})
 model.speak(audio_link, {expression:expression, resetExpression:resetExpression})
 
 ```
+
+## Fix "MediaElementAudioSource outputs zeroes due to CORS access restrictions for"
+Both functions have crossOrigin param. Setting that to `crossOrigin : "anonymous"` will fix it.
+```js
+model.speak(audio_link, {expression:expression, crossOrigin : "anonymous"})
+
+model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, crossOrigin : "anonymous"})
+```
+
 
 ## Suddenly stop audio and lipsync
 * Demo code
