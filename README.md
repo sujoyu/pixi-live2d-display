@@ -88,17 +88,20 @@ To make it clear, here's how you would use these files:
 #### Via npm
 
 ```sh
-npm install pixi-live2d-display
+npm install pixi-live2d-display-lipsyncpatch
 ```
 
 ```js
 import { Live2DModel } from 'pixi-live2d-display';
+// or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch'; // i didn't test this
 
 // if only Cubism 2.1
 import { Live2DModel } from 'pixi-live2d-display/cubism2';
+// or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism2';
 
 // if only Cubism 4
 import { Live2DModel } from 'pixi-live2d-display/cubism4';
+// or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 ```
 
 #### Via CDN (lipsync patched)
@@ -112,13 +115,13 @@ import { Live2DModel } from 'pixi-live2d-display/cubism4';
 
 
 <!-- if support for both Cubism 2.1 and 4 -->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-4/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-5/dist/index.min.js"></script>
 
 <!-- if only Cubism 2.1 support-->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-4/dist/cubism2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-5/dist/cubism2.min.js"></script>
 
 <!-- if only Cubism 4 support-->
-<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.4.0-ls-4/dist/cubism4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-5/dist/cubism4.min.js"></script>
 ```
 
 In this way, all the exported members are available under `PIXI.live2d` namespace, such as `PIXI.live2d.Live2DModel`.
@@ -180,7 +183,6 @@ var expression = 4; //[Optional arg, can be null or empty] [index|name of expres
 var resetExpression = true; //[Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
 
 model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, expression:expression, resetExpression:resetExpression})
-// Note: during this animation with sound, other animation will be ignored, even its forced. Once over, it'll be back to normal
 
 // if you dont want voice, just ignore the option
 model.motion(category_name, animation_index, priority_number)
