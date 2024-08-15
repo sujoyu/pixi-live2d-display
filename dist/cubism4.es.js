@@ -8784,11 +8784,6 @@ class MotionManager extends utils.EventEmitter {
       if (!this.state.reserve(group, index, priority)) {
         return false;
       }
-      if (this.currentAudio) {
-        if (!this.currentAudio.ended && priority != MotionPriority.FORCE) {
-          return false;
-        }
-      }
       const definition = (_a = this.definitions[group]) == null ? void 0 : _a[index];
       if (!definition) {
         return false;
