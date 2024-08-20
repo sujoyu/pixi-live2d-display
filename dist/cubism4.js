@@ -1478,7 +1478,7 @@ var __async = (__this, __arguments, generator) => {
     LogLevel2[LogLevel2["LogLevel_Off"] = 5] = "LogLevel_Off";
     return LogLevel2;
   })(LogLevel || {});
-  const CSM_ASSERT = process.env.NODE_ENV === "production" ? () => {
+  const CSM_ASSERT = typeof process !== "undefined" && process.env.NODE_ENV === "production" ? () => {
   } : (expr) => console.assert(expr);
   function CubismLogVerbose(fmt, ...args) {
     CubismDebug.print(LogLevel.LogLevel_Verbose, "[CSM][V]" + fmt + "\n", args);
@@ -7759,7 +7759,7 @@ var __async = (__this, __arguments, generator) => {
     preserveExpressionOnMotion: true,
     cubism4: exports2.CubismConfig
   };
-  const VERSION = "v0.5.0-ls-5";
+  const VERSION = "v0.5.0-ls-6";
   const logger = {
     log(tag, ...messages) {
       if (config.logLevel <= config.LOG_LEVEL_VERBOSE) {
