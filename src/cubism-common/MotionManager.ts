@@ -380,11 +380,11 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
             return false;
         }
         // Does not start a new motion if audio is still playing
-        // if (this.currentAudio) {
-        //     if (!this.currentAudio.ended && priority != MotionPriority.FORCE) {
-        //         return false;
-        //     }
-        // }
+        if (this.currentAudio) {
+            if (!this.currentAudio.ended && priority != MotionPriority.FORCE) {
+                return false;
+            }
+        }
 
         const definition = this.definitions[group]?.[index];
 
