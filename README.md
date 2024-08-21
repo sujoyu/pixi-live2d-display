@@ -6,7 +6,7 @@
 
 English | [中文](README.zh.md)
 
-Live2D integration for [PixiJS](https://github.com/pixijs/pixi.js) v6.
+Live2D integration for [PixiJS](https://github.com/pixijs/pixi.js) v7.
 
 This project aims to be a universal Live2D framework on the web platform. While the official Live2D framework is just
 complex and problematic, this project has rewritten it to unify and simplify the APIs, which allows you to control the
@@ -92,15 +92,15 @@ npm install pixi-live2d-display-lipsyncpatch
 ```
 
 ```js
-import { Live2DModel } from 'pixi-live2d-display';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';
 // or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch'; // i didn't test this
 
 // if only Cubism 2.1
-import { Live2DModel } from 'pixi-live2d-display/cubism2';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism2';
 // or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism2';
 
 // if only Cubism 4
-import { Live2DModel } from 'pixi-live2d-display/cubism4';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 // or import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 ```
 
@@ -128,9 +128,46 @@ In this way, all the exported members are available under `PIXI.live2d` namespac
 
 ## Basic usage
 
+### On demand import
+
+```typescript
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';
+import { Application, Ticker } from 'pixi.js';
+
+(async function () {
+  const app = Application({
+    view: document.getElementById('canvas'),
+  });
+
+  const model = await Live2DModel.from('shizuku.model.json', {
+    // register Ticker for model
+    ticker: Ticker.shared,
+  });
+
+  app.stage.addChild(model);
+
+  // transforms
+  model.x = 100;
+  model.y = 100;
+  model.rotation = Math.PI;
+  model.skew.x = Math.PI;
+  model.scale.set(2, 2);
+  model.anchor.set(0.5, 0.5);
+
+  // interaction
+  model.on('hit', (hitAreas) => {
+    if (hitAreas.includes('body')) {
+      model.motion('tap_body');
+    }
+  });
+})();
+```
+
+### Full import PIXI
+
 ```javascript
-// import * as PIXI from 'pixi.js'; // you can use PIXI from NPM or CDN (if CDN, no need to import it here)
-// import { Live2DModel } from 'pixi-live2d-display'; // Do not use the npm package (not supported yet), use the CDN instead!!!
+import * as PIXI from 'pixi.js';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';
 
 // expose PIXI to window so that this plugin is able to
 // reference window.PIXI.Ticker to automatically update Live2D models
