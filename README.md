@@ -128,7 +128,7 @@ In this way, all the exported members are available under `PIXI.live2d` namespac
 
 ## Basic usage
 
-### On demand import
+### On demand import (Recommend)
 
 ```typescript
 import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';

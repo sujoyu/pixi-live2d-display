@@ -109,7 +109,7 @@ import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 
 ## 基础使用
 
-### 按需引入PIXI
+### 按需引入PIXI (推荐)
 
 ```typescript
 import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
