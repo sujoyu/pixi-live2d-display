@@ -4,7 +4,7 @@
 ![Cubism version](https://img.shields.io/badge/Cubism-2/3/4-ff69b4?style=flat-square)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/guansss/pixi-live2d-display/test.yml?style=flat-square)
 
-为 [PixiJS](https://github.com/pixijs/pixi.js) v6 提供的 Live2D 插件
+为 [PixiJS](https://github.com/pixijs/pixi.js) v7 提供的 Live2D 插件
 
 此项目旨在成为 web 平台上的通用 Live2D 框架。由于 Live2D 的官方框架非常复杂且不可靠，这个项目已将其重写以提供统一且简单的 API，使你可以从较高的层次来控制 Live2D 模型而无需了解其内部的工作原理
 
@@ -17,10 +17,12 @@
 -   比官方框架更好的动作预约逻辑
 -   从上传的文件或 zip 文件中加载 (实验性功能)
 -   完善的类型定义 - 我们都喜欢类型！
+-   实时口型同步
 
 #### 要求
 
--   PixiJS：>6
+-   PixiJS：7.x
+-   Cubism core: 2.1 or 4 
 -   浏览器：WebGL， ES6
 
 #### 示例
@@ -72,34 +74,76 @@ Cubism 2.1 需要加载 `live2d.min.js`，[从 2019/9/4 起](https://help.live2d
 #### 通过 npm
 
 ```sh
-npm install pixi-live2d-display
+npm install pixi-live2d-display-lipsyncpatch
 ```
 
 ```js
-import { Live2DModel } from 'pixi-live2d-display';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';
 
 // 如果只需要 Cubism 2.1
-import { Live2DModel } from 'pixi-live2d-display/cubism2';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism2';
 
 // 如果只需要 Cubism 4
-import { Live2DModel } from 'pixi-live2d-display/cubism4';
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 ```
 
 #### 通过 CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+<!-- 加载 Cubism 和 PixiJS -->
+<script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@7.x/dist/pixi.min.js"></script>
+
+<!-- 如果同时需要 Cubism 2.1 和 Cubism 4 -->
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-7/dist/index.min.js"></script>
 
 <!-- 如果只需要 Cubism 2.1 -->
-<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/cubism2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-7/dist/cubism2.min.js"></script>
 
 <!-- 如果只需要 Cubism 4 -->
-<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/cubism4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v0.5.0-ls-7/dist/cubism4.min.js"></script>
 ```
 
 通过这种方式加载的话，所有成员都会被导出到 `PIXI.live2d` 命名空间下，比如 `PIXI.live2d.Live2DModel`
 
 ## 基础使用
+
+### 按需引入PIXI (推荐)
+
+```typescript
+import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
+import { Application, Ticker } from 'pixi.js';
+
+(async function () {
+  const app = Application({
+    view: document.getElementById('canvas'),
+  });
+
+  const model = await Live2DModel.from('shizuku.model.json', {
+    // register Ticker for model
+    ticker: Ticker.shared,
+  });
+
+  app.stage.addChild(model);
+
+  // transforms
+  model.x = 100;
+  model.y = 100;
+  model.rotation = Math.PI;
+  model.skew.x = Math.PI;
+  model.scale.set(2, 2);
+  model.anchor.set(0.5, 0.5);
+
+  // interaction
+  model.on('hit', (hitAreas) => {
+    if (hitAreas.includes('body')) {
+      model.motion('tap_body');
+    }
+  });
+})();
+```
+### 全量引入PIXI
 
 ```javascript
 import * as PIXI from 'pixi.js';
