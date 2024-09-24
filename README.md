@@ -211,20 +211,25 @@ window.PIXI = PIXI;
   * 3: Just do it! Do id now! [Forced] [default when using audio]
 * Time to code
 ```js
-var category_name = "Idle" // name of the morion category
-var animation_index = 0 // index of animation under that motion category [null => random]
-var priority_number = 3 // if you want to keep the current animation going or move to new animation by force [0: no priority, 1: idle, 2: normal, 3: forced]
-var audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" //[Optional arg, can be null or empty] [relative or full url path] [mp3 or wav file]
-var volume = 1; //[Optional arg, can be null or empty] [0.0 - 1.0]
-var expression = 4; //[Optional arg, can be null or empty] [index|name of expression]
-var resetExpression = true; //[Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
+const category_name = "Idle" // name of the morion category
+const animation_index = 0 // index of animation under that motion category [null => random]
+const priority_number = 3 // if you want to keep the current animation going or move to new animation by force [0: no priority, 1: idle, 2: normal, 3: forced]
+const audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" //[Optional arg, can be null or empty] [relative or full url path] [mp3 or wav file]
+const volume = 1; //[Optional arg, can be null or empty] [0.0 - 1.0]
+const expression = 4; //[Optional arg, can be null or empty] [index|name of expression]
+const resetExpression = true; //[Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
 
-model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, expression:expression, resetExpression:resetExpression})
+model.motion(category_name, animation_index, priority_number, {
+  sound: audio_link,
+  volume: volume,
+  expression: expression,
+  resetExpression: resetExpression
+});
 
 // if you dont want voice, just ignore the option
-model.motion(category_name, animation_index, priority_number)
-model.motion(category_name, animation_index, priority_number, {expression:expression, resetExpression:resetExpression})
-model.motion(category_name, animation_index, priority_number, {expression:expression, resetExpression:false})
+model.motion(category_name, animation_index, priority_number);
+model.motion(category_name, animation_index, priority_number, { expression: expression, resetExpression: resetExpression });
+model.motion(category_name, animation_index, priority_number, { expression: expression, resetExpression: false });
 
 ```
 
@@ -233,61 +238,74 @@ model.motion(category_name, animation_index, priority_number, {expression:expres
 * This supports expressions arg too (if you have/need any)
 * Demo code
 ```js
-var audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" // [relative or full url path] [mp3 or wav file]
-var volume = 1; // [Optional arg, can be null or empty] [0.0 - 1.0]
-var expression = 4; // [Optional arg, can be null or empty] [index|name of expression]
-var resetExpression = true; // [Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
-var crossOrigin = "anonymous"; // [Optional arg, to use not same-origin audios] [DEFAULT: null]
+const audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" // [relative or full url path] [mp3 or wav file]
+const volume = 1; // [Optional arg, can be null or empty] [0.0 - 1.0]
+const expression = 4; // [Optional arg, can be null or empty] [index|name of expression]
+const resetExpression = true; // [Optional arg, can be null or empty] [true|false] [default: true] [if true, expression will be reset to default after animation is over]
+const crossOrigin = "anonymous"; // [Optional arg, to use not same-origin audios] [DEFAULT: null]
 
-model.speak(audio_link, {volume: volume, expression:expression, resetExpression:resetExpression, crossOrigin: crossOrigin})
+model.speak(audio_link, {
+  volume: volume,
+  expression: expression,
+  resetExpression: resetExpression,
+  crossOrigin: crossOrigin
+});
 
 // Or if you want to keep some things default
-model.speak(audio_link)
-model.speak(audio_link, {volume: volume})
-model.speak(audio_link, {expression:expression, resetExpression:resetExpression})
+model.speak(audio_link);
+model.speak(audio_link, { volume: volume });
+model.speak(audio_link, { expression: expression, resetExpression: resetExpression });
 
 ```
 
 ## Fix "MediaElementAudioSource outputs zeroes due to CORS access restrictions for"
-Both functions have crossOrigin param. Setting that to `crossOrigin : "anonymous"` will fix it.
+- Both functions have crossOrigin param. Setting that to `crossOrigin : "anonymous"` will fix it.
 ```js
-model.speak(audio_link, {expression:expression, crossOrigin : "anonymous"})
+model.speak(audio_link, { expression: expression, crossOrigin: "anonymous" });
 
-model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, crossOrigin : "anonymous"})
+model.motion(category_name, animation_index, priority_number, { sound: audio_link, volume: volume, crossOrigin: "anonymous" });
+
 ```
 
 
 ## Suddenly stop audio and lipsync
 * Demo code
 ```js
-model.stopSpeaking()
+model.stopSpeaking();
+
 ```
 
 ## Reset motions as well as audio and lipsync
 * Demo code
 ```js
-model.stopMotions()
+model.stopMotions();
+
 ```
 
 ## Use callback function after a voiceline is over
 * Demo code
 ```js
-model.speak(audio_link, {volume: volume, 
-  onFinish: () => {console.log("Voiceline is over")},
-  onError: (err) => {console.log("Error: "+err)} // [if any error occurs]
-})
+model.speak(audio_link, {
+  volume: volume, 
+  onFinish: () => { console.log("Voiceline is over") },
+  onError: (err) => { console.log("Error: ", err) } // [if any error occurs]
+});
 
-model.motion(category_name, animation_index, priority_number, {sound: audio_link, volume: volume, expression:expression,
-  onFinish: () => {console.log("Voiceline and Animation is over")},
-  onError: (err) => {console.log("Error: "+err)} // [if any error occurs]
-})
+model.motion(category_name, animation_index, priority_number, {
+  sound: audio_link,
+  volume: volume,
+  expression: expression,
+  onFinish: () => { console.log("Voiceline and Animation is over") },
+  onError: (err) => { console.log("Error: ", err) } // [if any error occurs]
+});
 ```
 
 ## Totally destroy the model
 * This will also stop the motion and audio from running and hide the model
 * Demo code
 ```js
-model.destroy()
+model.destroy();
+
 ```
 
 ## Result
