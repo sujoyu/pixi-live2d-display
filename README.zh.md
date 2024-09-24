@@ -87,7 +87,7 @@ import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism2';
 import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch/cubism4';
 ```
 
-#### 通过 CDN
+#### 通过 CDN (口型同步修改版)
 
 ```html
 <!-- 加载 Cubism 和 PixiJS -->
@@ -177,6 +177,115 @@ window.PIXI = PIXI;
     });
 })();
 ```
+
+## 口型同步
+
+### 触发模型动作同时播放音频同步口型
+```ts
+const category_name = "Idle" // 模型动作名称
+const animation_index = 0 // 该运动类别下的动画索引 [null => random]
+const priority_number = 3 // 优先级编号 如果你想保持当前动画继续或强制移动到新动画 可以调整此值 [0: 无优先级, 1: 空闲, 2: 普通, 3: 强制]
+const audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" // 音频链接地址 [可选参数，可以为null或空] [相对或完整url路径] [mp3或wav文件]
+const volume = 1; // 声音大小 [可选参数，可以为null或空][0.0-1.0]
+const expression = 4; // 模型表情 [可选参数，可以为null或空] [index | expression表情名称]
+const resetExpression = true; // 是否在动画结束后将表情expression重置为默认值 [可选参数，可以为null或空] [true | false] [default: true]
+
+model.motion(category_name, animation_index, priority_number, {
+  sound: audio_link,
+  volume: volume,
+  expression: expression,
+  resetExpression: resetExpression
+});
+
+// 如果不想要声音 就忽略 sound 和 volume
+model.motion(category_name, animation_index, priority_number);
+model.motion(category_name, animation_index, priority_number, { expression: expression, resetExpression: resetExpression });
+model.motion(category_name, animation_index, priority_number, { expression: expression, resetExpression: false });
+
+```
+
+### 仅播放音频同步口型
+```ts
+const audio_link = "https://cdn.jsdelivr.net/gh/RaSan147/pixi-live2d-display@v1.0.3/playground/test.mp3" // 音频链接地址 [可选参数，可以为null或空] [相对或完整url路径] [mp3或wav文件]
+const volume = 1; // 声音大小 [可选参数，可以为null或空][0.0-1.0]
+const expression = 4; // 模型表情 [可选参数，可以为null或空] [index | expression表情名称]
+const resetExpression = true; // 是否在动画结束后将表情expression重置为默认值 [可选参数，可以为null或空] [true | false] [default: true]
+const crossOrigin = "anonymous"; // 使用不同来源的音频 [可选] [default: null]
+
+model.speak(audio_link, {
+  volume: volume,
+  expression: expression,
+  resetExpression: resetExpression,
+  crossOrigin: crossOrigin
+});
+
+// 或者如果您想保留某些默认设置
+model.speak(audio_link);
+model.speak(audio_link, { volume: volume });
+model.speak(audio_link, { expression: expression, resetExpression: resetExpression });
+
+```
+
+### 解决报错 "MediaElementAudioSource outputs zeroes due to CORS access restrictions for"
+
+- 这两个函数都有 crossOrigin 参数。将其设置为 crossOrigin : "anonymous" 即可解决。
+
+```ts
+model.speak(audio_link, { expression: expression, crossOrigin: "anonymous" });
+
+model.motion(category_name, animation_index, priority_number, { sound: audio_link, volume: volume, crossOrigin: "anonymous" });
+
+```
+
+### 立即中断音频播放和口型同步
+
+```ts
+model.stopSpeaking();
+
+```
+
+### 重置动作以及音频和口型同步
+
+```ts
+model.stopMotions();
+
+```
+
+### 音频播放结束后使用回调函数
+
+```ts
+model.speak(audio_link, {
+  volume: volume, 
+  onFinish: () => { console.log("Voiceline is over") },
+  onError: (err) => { console.log("Error: ", err) } // [如果发生任何错误]
+});
+
+model.motion(category_name, animation_index, priority_number, {
+  sound: audio_link,
+  volume: volume,
+  expression: expression,
+  onFinish: () => { console.log("Voiceline and Animation is over") },
+  onError: (err) => { console.log("Error: ", err) } // [如果发生任何错误]
+});
+
+```
+
+### 完全销毁模型 (destroy)
+
+- 这也将停止运动和音频的播放并隐藏模型
+
+```ts
+model.destroy();
+
+```
+
+### 口型同步效果预览
+
+https://user-images.githubusercontent.com/34002411/230723497-612146b1-5593-4dfa-911d-accb331c5b9b.mp4
+
+# 请参阅此处了解更多文档： [文档](https://guansss.github.io/pixi-live2d-display/)
+
+
 
 ## 包导入
 
