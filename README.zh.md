@@ -321,3 +321,7 @@ Renderer.registerPlugin('interaction', InteractionManager);
 
 示例的 Live2D 模型 Shizuku (Cubism 2.1) 和 Haru (Cubism 4) 遵守 Live2D 的
 [Free Material License](https://www.live2d.com/eula/live2d-free-material-license-agreement_en.html)
+
+# 鸣谢
+* [fatalgoth](https://github.com/fatalgoth/pixi-live2d-display) 让口型同步成为可能。
+* [windjackz](https://github.com/windjackz/pixi-live2d-display) 创建了所有酷炫的功能。
