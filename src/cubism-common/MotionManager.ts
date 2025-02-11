@@ -256,7 +256,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
         let soundURL: string | undefined;
         const isBase64Content = sound && sound.startsWith("data:");
 
-        console.log(onFinish)
+        console.log(onFinish);
 
         if (sound && !isBase64Content) {
             const A = document.createElement("a");
@@ -274,7 +274,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                 audio = SoundManager.add(
                     file,
                     (that = this) => {
-                        console.log('Audio finished playing'); // Add this line
+                        console.log("Audio finished playing"); // Add this line
                         onFinish?.();
                         resetExpression &&
                             expression &&
@@ -283,7 +283,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                         that.currentAudio = undefined;
                     }, // reset expression when audio is done
                     (e, that = this) => {
-                        console.log('Error during audio playback:', e); // Add this line
+                        console.log("Error during audio playback:", e); // Add this line
                         onError?.(e);
                         resetExpression &&
                             expression &&
@@ -424,9 +424,9 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                 audio = SoundManager.add(
                     file,
                     (that = this) => {
-                        console.log('Audio finished playing'); // Add this line
+                        console.log("Audio finished playing"); // Add this line
                         onFinish?.();
-                        console.log(onFinish)
+                        console.log(onFinish);
                         resetExpression &&
                             expression &&
                             that.expressionManager &&
@@ -434,7 +434,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
                         that.currentAudio = undefined;
                     }, // reset expression when audio is done
                     (e, that = this) => {
-                        console.log('Error during audio playback:', e); // Add this line
+                        console.log("Error during audio playback:", e); // Add this line
                         onError?.(e);
                         resetExpression &&
                             expression &&
@@ -497,7 +497,7 @@ export abstract class MotionManager<Motion = any, MotionSpec = any> extends util
 
         this.playing = true;
 
-        this._startMotion(motion!);
+        this._startMotion(motion!, onFinish);
 
         return true;
     }

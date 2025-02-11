@@ -4,10 +4,7 @@
   "use strict";var __defProp = Object.defineProperty;
 var __pow = Math.pow;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -344,8 +341,7 @@ var __async = (__this, __arguments, generator) => {
     update(dt) {
       const dx = this.targetX - this.x;
       const dy = this.targetY - this.y;
-      if (Math.abs(dx) < EPSILON && Math.abs(dy) < EPSILON)
-        return;
+      if (Math.abs(dx) < EPSILON && Math.abs(dy) < EPSILON) return;
       const d = Math.sqrt(__pow(dx, 2) + __pow(dy, 2));
       const maxSpeed = MAX_SPEED / (1e3 / dt);
       let ax = maxSpeed * (dx / d) - this.vx;
@@ -1188,7 +1184,7 @@ var __async = (__this, __arguments, generator) => {
           this.expressionManager.setExpression(expression);
         }
         this.playing = true;
-        this._startMotion(motion);
+        this._startMotion(motion, onFinish);
         return true;
       });
     }
@@ -1579,14 +1575,11 @@ var __async = (__this, __arguments, generator) => {
     let index = -1;
     return dispatch(0);
     function dispatch(i, err) {
-      if (err)
-        return Promise.reject(err);
-      if (i <= index)
-        return Promise.reject(new Error("next() called multiple times"));
+      if (err) return Promise.reject(err);
+      if (i <= index) return Promise.reject(new Error("next() called multiple times"));
       index = i;
       const fn = middleware[i];
-      if (!fn)
-        return Promise.resolve();
+      if (!fn) return Promise.resolve();
       try {
         return Promise.resolve(fn(context, dispatch.bind(null, i + 1)));
       } catch (err2) {
@@ -3017,8 +3010,7 @@ var __async = (__this, __arguments, generator) => {
     getDrawableVertices(drawIndex) {
       if (typeof drawIndex === "string") {
         drawIndex = this.coreModel.getDrawDataIndex(drawIndex);
-        if (drawIndex === -1)
-          throw new TypeError("Unable to find drawable ID: " + drawIndex);
+        if (drawIndex === -1) throw new TypeError("Unable to find drawable ID: " + drawIndex);
       }
       return this.coreModel.getTransformedPoints(drawIndex).slice();
     }
@@ -3341,8 +3333,7 @@ var __async = (__this, __arguments, generator) => {
     createCoreModel(data) {
       const model = Live2DModelWebGL.loadModel(data);
       const error = Live2D.getError();
-      if (error)
-        throw error;
+      if (error) throw error;
       return model;
     },
     createInternalModel(coreModel, settings, options) {
@@ -4065,8 +4056,7 @@ var __async = (__this, __arguments, generator) => {
      * モデルを描画する
      */
     drawModel() {
-      if (this.getModel() == null)
-        return;
+      if (this.getModel() == null) return;
       this.saveProfile();
       this.doDrawModel();
       this.restoreProfile();
@@ -4414,8 +4404,7 @@ var __async = (__this, __arguments, generator) => {
         return;
       }
       const logPrint = CubismFramework.coreLogFunction;
-      if (!logPrint)
-        return;
+      if (!logPrint) return;
       const buffer = format.replace(/{(\d+)}/g, (m, k) => {
         return args[k];
       });
@@ -4431,10 +4420,8 @@ var __async = (__this, __arguments, generator) => {
      */
     static dumpBytes(logLevel, data, length) {
       for (let i = 0; i < length; i++) {
-        if (i % 16 == 0 && i > 0)
-          this.print(logLevel, "\n");
-        else if (i % 8 == 0 && i > 0)
-          this.print(logLevel, "  ");
+        if (i % 16 == 0 && i > 0) this.print(logLevel, "\n");
+        else if (i % 8 == 0 && i > 0) this.print(logLevel, "  ");
         this.print(logLevel, "{0} ", [data[i] & 255]);
       }
       this.print(logLevel, "\n");
@@ -6847,8 +6834,7 @@ var __async = (__this, __arguments, generator) => {
           if (layoutCount < layoutCountMaxValue && channelNo == checkChannelNo) {
             layoutCount += renderTextureNo < countPerSheetMod ? 1 : 0;
           }
-          if (layoutCount == 0)
-            ;
+          if (layoutCount == 0) ;
           else if (layoutCount == 1) {
             const clipContext = this._clippingContextListForMask[curClipIndex++];
             clipContext._layoutChannelNo = channelNo;
@@ -7034,16 +7020,12 @@ var __async = (__this, __arguments, generator) => {
   }
   class CubismRendererProfile_WebGL {
     setGlEnable(index, enabled) {
-      if (enabled)
-        this.gl.enable(index);
-      else
-        this.gl.disable(index);
+      if (enabled) this.gl.enable(index);
+      else this.gl.disable(index);
     }
     setGlEnableVertexAttribArray(index, enabled) {
-      if (enabled)
-        this.gl.enableVertexAttribArray(index);
-      else
-        this.gl.disableVertexAttribArray(index);
+      if (enabled) this.gl.enableVertexAttribArray(index);
+      else this.gl.disableVertexAttribArray(index);
     }
     save() {
       if (this.gl == null) {
@@ -8363,8 +8345,7 @@ var __async = (__this, __arguments, generator) => {
     getDrawableVertices(drawIndex) {
       if (typeof drawIndex === "string") {
         drawIndex = this.coreModel.getDrawableIndex(drawIndex);
-        if (drawIndex === -1)
-          throw new TypeError("Unable to find drawable ID: " + drawIndex);
+        if (drawIndex === -1) throw new TypeError("Unable to find drawable ID: " + drawIndex);
       }
       const arr = this.coreModel.getDrawableVertices(drawIndex).slice();
       for (let i = 0; i < arr.length; i += 2) {
@@ -8958,13 +8939,7 @@ var __async = (__this, __arguments, generator) => {
      * @param color 設定する乗算色(CubismTextureColor)
      */
     setPartMultiplyColorByTextureColor(partIndex, color) {
-      this.setPartMultiplyColorByRGBA(
-        partIndex,
-        color.R,
-        color.G,
-        color.B,
-        color.A
-      );
+      this.setPartMultiplyColorByRGBA(partIndex, color.R, color.G, color.B, color.A);
     }
     /**
      * 乗算色をセットする
@@ -8991,13 +8966,7 @@ var __async = (__this, __arguments, generator) => {
      * @param color 設定するスクリーン色(CubismTextureColor)
      */
     setPartScreenColorByTextureColor(partIndex, color) {
-      this.setPartScreenColorByRGBA(
-        partIndex,
-        color.R,
-        color.G,
-        color.B,
-        color.A
-      );
+      this.setPartScreenColorByRGBA(partIndex, color.R, color.G, color.B, color.A);
     }
     /**
      * スクリーン色をセットする
@@ -9162,9 +9131,7 @@ var __async = (__this, __arguments, generator) => {
         return this._userCullings[drawableIndex].isCulling;
       }
       const constantFlags = this._model.drawables.constantFlags;
-      return !Live2DCubismCore.Utils.hasIsDoubleSidedBit(
-        constantFlags[drawableIndex]
-      );
+      return !Live2DCubismCore.Utils.hasIsDoubleSidedBit(constantFlags[drawableIndex]);
     }
     /**
      * Drawableのカリング情報を設定する。
@@ -9388,9 +9355,7 @@ var __async = (__this, __arguments, generator) => {
       if (parameterIndex in this._notExistParameterValues) {
         return this._notExistParameterValues[parameterIndex];
       }
-      CSM_ASSERT(
-        0 <= parameterIndex && parameterIndex < this.getParameterCount()
-      );
+      CSM_ASSERT(0 <= parameterIndex && parameterIndex < this.getParameterCount());
       return this._parameterValues[parameterIndex];
     }
     /**
@@ -9413,9 +9378,7 @@ var __async = (__this, __arguments, generator) => {
         this._notExistParameterValues[parameterIndex] = weight == 1 ? value : this._notExistParameterValues[parameterIndex] * (1 - weight) + value * weight;
         return;
       }
-      CSM_ASSERT(
-        0 <= parameterIndex && parameterIndex < this.getParameterCount()
-      );
+      CSM_ASSERT(0 <= parameterIndex && parameterIndex < this.getParameterCount());
       if (this._model.parameters.maximumValues[parameterIndex] < value) {
         value = this._model.parameters.maximumValues[parameterIndex];
       }
@@ -9548,9 +9511,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableDynamicFlagVertexPositionsDidChange(drawableIndex) {
       const dynamicFlags = this._model.drawables.dynamicFlags;
-      return Live2DCubismCore.Utils.hasVertexPositionsDidChangeBit(
-        dynamicFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasVertexPositionsDidChangeBit(dynamicFlags[drawableIndex]);
     }
     /**
      * Drawableの頂点インデックスの個数の取得
@@ -9655,11 +9616,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableBlendMode(drawableIndex) {
       const constantFlags = this._model.drawables.constantFlags;
-      return Live2DCubismCore.Utils.hasBlendAdditiveBit(
-        constantFlags[drawableIndex]
-      ) ? CubismBlendMode.CubismBlendMode_Additive : Live2DCubismCore.Utils.hasBlendMultiplicativeBit(
-        constantFlags[drawableIndex]
-      ) ? CubismBlendMode.CubismBlendMode_Multiplicative : CubismBlendMode.CubismBlendMode_Normal;
+      return Live2DCubismCore.Utils.hasBlendAdditiveBit(constantFlags[drawableIndex]) ? CubismBlendMode.CubismBlendMode_Additive : Live2DCubismCore.Utils.hasBlendMultiplicativeBit(constantFlags[drawableIndex]) ? CubismBlendMode.CubismBlendMode_Multiplicative : CubismBlendMode.CubismBlendMode_Normal;
     }
     /**
      * Drawableのマスクの反転使用の取得
@@ -9672,9 +9629,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableInvertedMaskBit(drawableIndex) {
       const constantFlags = this._model.drawables.constantFlags;
-      return Live2DCubismCore.Utils.hasIsInvertedMaskBit(
-        constantFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasIsInvertedMaskBit(constantFlags[drawableIndex]);
     }
     /**
      * Drawableのクリッピングマスクリストの取得
@@ -9703,7 +9658,7 @@ var __async = (__this, __arguments, generator) => {
         }
         return true;
       }
-      return false;
+      return true;
     }
     /**
      * Drawableの表示情報を取得する
@@ -9727,9 +9682,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableDynamicFlagVisibilityDidChange(drawableIndex) {
       const dynamicFlags = this._model.drawables.dynamicFlags;
-      return Live2DCubismCore.Utils.hasVisibilityDidChangeBit(
-        dynamicFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasVisibilityDidChangeBit(dynamicFlags[drawableIndex]);
     }
     /**
      * Drawableの不透明度の変化情報の取得
@@ -9742,9 +9695,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableDynamicFlagOpacityDidChange(drawableIndex) {
       const dynamicFlags = this._model.drawables.dynamicFlags;
-      return Live2DCubismCore.Utils.hasOpacityDidChangeBit(
-        dynamicFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasOpacityDidChangeBit(dynamicFlags[drawableIndex]);
     }
     /**
      * Drawableの描画順序の変化情報の取得
@@ -9757,9 +9708,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableDynamicFlagRenderOrderDidChange(drawableIndex) {
       const dynamicFlags = this._model.drawables.dynamicFlags;
-      return Live2DCubismCore.Utils.hasRenderOrderDidChangeBit(
-        dynamicFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasRenderOrderDidChangeBit(dynamicFlags[drawableIndex]);
     }
     /**
      * Drawableの乗算色・スクリーン色の変化情報の取得
@@ -9772,9 +9721,7 @@ var __async = (__this, __arguments, generator) => {
      */
     getDrawableDynamicFlagBlendColorDidChange(drawableIndex) {
       const dynamicFlags = this._model.drawables.dynamicFlags;
-      return Live2DCubismCore.Utils.hasBlendColorDidChangeBit(
-        dynamicFlags[drawableIndex]
-      );
+      return Live2DCubismCore.Utils.hasBlendColorDidChangeBit(dynamicFlags[drawableIndex]);
     }
     /**
      * 保存されたパラメータの読み込み
@@ -9814,10 +9761,7 @@ var __async = (__this, __arguments, generator) => {
       {
         const drawableIds = this._model.drawables.ids;
         const drawableCount = this._model.drawables.count;
-        const userCulling = new DrawableCullingData(
-          false,
-          false
-        );
+        const userCulling = new DrawableCullingData(false, false);
         {
           for (let i = 0; i < partCount; ++i) {
             const multiplyColor = new CubismTextureColor(
@@ -9836,10 +9780,7 @@ var __async = (__this, __arguments, generator) => {
               false,
               multiplyColor
             );
-            const userScreenColor = new PartColorData(
-              false,
-              screenColor
-            );
+            const userScreenColor = new PartColorData(false, screenColor);
             this._userPartMultiplyColors.push(userMultiplyColor);
             this._userPartScreenColors.push(userScreenColor);
             this._partChildDrawables.push([]);

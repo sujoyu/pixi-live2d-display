@@ -1,10 +1,7 @@
 var __defProp = Object.defineProperty;
 var __pow = Math.pow;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -342,8 +339,7 @@ class FocusController {
   update(dt) {
     const dx = this.targetX - this.x;
     const dy = this.targetY - this.y;
-    if (Math.abs(dx) < EPSILON && Math.abs(dy) < EPSILON)
-      return;
+    if (Math.abs(dx) < EPSILON && Math.abs(dy) < EPSILON) return;
     const d = Math.sqrt(__pow(dx, 2) + __pow(dy, 2));
     const maxSpeed = MAX_SPEED / (1e3 / dt);
     let ax = maxSpeed * (dx / d) - this.vx;
@@ -1186,7 +1182,7 @@ class MotionManager extends utils.EventEmitter {
         this.expressionManager.setExpression(expression);
       }
       this.playing = true;
-      this._startMotion(motion);
+      this._startMotion(motion, onFinish);
       return true;
     });
   }
@@ -1577,14 +1573,11 @@ function runMiddlewares(middleware, context) {
   let index = -1;
   return dispatch(0);
   function dispatch(i, err) {
-    if (err)
-      return Promise.reject(err);
-    if (i <= index)
-      return Promise.reject(new Error("next() called multiple times"));
+    if (err) return Promise.reject(err);
+    if (i <= index) return Promise.reject(new Error("next() called multiple times"));
     index = i;
     const fn = middleware[i];
-    if (!fn)
-      return Promise.resolve();
+    if (!fn) return Promise.resolve();
     try {
       return Promise.resolve(fn(context, dispatch.bind(null, i + 1)));
     } catch (err2) {
@@ -3015,8 +3008,7 @@ class Cubism2InternalModel extends InternalModel {
   getDrawableVertices(drawIndex) {
     if (typeof drawIndex === "string") {
       drawIndex = this.coreModel.getDrawDataIndex(drawIndex);
-      if (drawIndex === -1)
-        throw new TypeError("Unable to find drawable ID: " + drawIndex);
+      if (drawIndex === -1) throw new TypeError("Unable to find drawable ID: " + drawIndex);
     }
     return this.coreModel.getTransformedPoints(drawIndex).slice();
   }
@@ -3339,8 +3331,7 @@ Live2DFactory.registerRuntime({
   createCoreModel(data) {
     const model = Live2DModelWebGL.loadModel(data);
     const error = Live2D.getError();
-    if (error)
-      throw error;
+    if (error) throw error;
     return model;
   },
   createInternalModel(coreModel, settings, options) {
